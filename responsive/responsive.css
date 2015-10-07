@@ -1,55 +1,55 @@
-.part1 {width: 166.5px height: 125px background:url(images/homer.jpg) 0 0px;}
-
-.part2 {width: 166.5px height: 125px background:url(images/homer.jpg) 166.5px 0px;}
-
-.part3 {width: 166.5px height: 125px background:url(images/homer.jpg) 0 -125px;}
-
-.part4 {width: 166.5px height: 125px background:url(images/homer.jpg) 166.5px -125 px;}
-
-.part5 {width: 166.5px height: 125px background:url(images/homer.jpg) 0 -250px;}
-
-.part6 {width: 166.5px height: 125px background:url(images/homer.jpg) 166.5px -250;}
-
-.part7 {width: 166.5px height: 125px background:url(images/homer.jpg) 0 -375px;}
-
-.part8 {width: 166.5px height: 125px background:url(images/homer.jpg) 166.5px -375px;}
-
 @media screen and (min-width: 1201px)
 {
-	div#homer.part1;
+	.homer{
+		width: 166.5px height: 125px background:url(images/homer.jpg) 0 0px;
+	}
 }
 
-@media screen and (max-width: 1200px min-width: 1101px)
+@media screen and (max-width: 1200px) and (min-width: 1101px)
 {
-	part2;
+	.homer{
+		width: 166.5px height: 125px background:url(images/homer.jpg) 166.5px 0px;
+	}
 }
 
-@media screen and (max-width: 1100px min-width: 1001px)
+@media screen and (max-width: 1100px) and ( min-width: 1001px)
 {
-	part3;
+	.homer{
+		width: 166.5px height: 125px background:url(images/homer.jpg) 0 -125px;
+	}
 }
 
-@media screen and (max-width: 1000px min-width: 901px)
+@media screen and (max-width: 1000px) and (min-width: 901px)
 {
-	part4;
+	.homer{
+		width: 166.5px height: 125px background:url(images/homer.jpg) 166.5px -125px;
+	}
 }
 
-@media screen and (max-width: 900px min-width: 801px)
+@media screen and (max-width: 900px) and (min-width: 801px)
 {
-	part5;
+	.homer{
+		width: 166.5px height: 125px background:url(images/homer.jpg) 0 -250px;
+	}
 }
 
-@media screen and (max-width: 800px min-width: 701px)
+@media screen and (max-width: 800px) and (min-width: 701px)
 {
-	part6;
+	.homer{
+		width: 166.5px height: 125px background:url(images/homer.jpg) 166.5px -250px;
+	}
 }
 
-@media screen and (max-width: 700px min-width: 601px)
+@media screen and (max-width: 700px) and (min-width: 601px)
 {
-	part7;
+	.homer{
+		width: 166.5px height: 125px background:url(images/homer.jpg) 0 -375px;
+	}
 }
 
 @media screen and (max-width: 600px)
 {
-	part8;
+	.homer{
+		width: 166.5px height: 125px background:url(images/homer.jpg) 166.5px -375px;
+	}
 }
