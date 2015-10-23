@@ -4,10 +4,10 @@
 # On: 10/22/2015
 #
 
-1. What has been implemented correctly? What hasn't?
+1. I believe that everything was implemented correctly. 
 
-2. Who have I collaborated with? Mateo Davis, Rohun Dhar
+2. For this lab, I have spoken with and worked with Mateo Davis, Rohun Dhar, and Erica Schwartz. 
 
-3. How many hours? Began today on the 22nd at 3pm
+3. I worked on this assignment for approximately 4 hours.
 
-4. Is it possible to request the data from a different origin (e.g., http://messagehub.herokuapp.com/) or from your local machine (from file:///) from using XMLHttpRequest? Why or why not?
+4. It's not possible to request data from another origin due to same origin policy. In other words, trying to take information from an origin like the local machine won't work due to limitations in place to prevent a security risk.
