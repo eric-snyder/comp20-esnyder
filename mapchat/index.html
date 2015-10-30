@@ -1,22 +1,131 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <link rel="stylesheet" type="text/css" href="theme.css">
-  </head>
-  <body>
-    <div id="map"></div>
-    <script type="text/javascript">
 
-var map;
-function initMap() {
-  map = new google.maps.Map(document.getElementById('map'), {
-    center: {lat: -34.397, lng: 150.644},
-    zoom: 8
-  });
-}
+<html>
+
+  <head>
+    <title>Geolocation</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=true"></script>
+    <link rel="stylesheet" href="style.css" /> 
+    <script>
+      var myLat = 0;
+      var myLng = 0;
+      var url = "https://secret-about-box.herokuapp.com/sendLocation";
+      var xhr = new XMLHttpRequest();
+      var me = new google.maps.LatLng(myLat, myLng);
+      var myOptions = {
+            zoom: 13, 
+            center: me,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+          };
+      var map;
+      var marker;
+      var infowindow = new google.maps.InfoWindow();
+      
+      //
+      //
+      //initializes page by bringing up "me" location on the map
+      function init() {
+        map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+        getMyLocation();
+      }
+      
+      //
+      //
+      //function that checks for navigator support, and then gets location of object calling
+      function getMyLocation() {          
+        if (navigator.geolocation) { // the navigator.geolocation object is supported on your browser
+          navigator.geolocation.getCurrentPosition(function(position) {
+            myLat = position.coords.latitude;
+            myLng = position.coords.longitude;
+            var myid = "login=EricHawthorn&lat="+myLat+"&lng="+myLng+"&message=bye felicia";
+            xhr.open("POST", url, true);
+            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            renderMap();
+            xhr.onreadystatechange = parseData;
+            xhr.send(myid);
+          });
+        }
+        else {    //if geolocation isn's supported, will create error message
+          alert("Your browser doesn't use geolocation! There's a reason nobody uses Internet Explorer anymore.");
+        }
+      }
+
+      function parseData() {
+
+              if (xhr.readyState == 4 && xhr.status == 200) { 
+                info = JSON.parse(xhr.responseText);
+                for (var i = 0; i < info.length; i++) {
+                  var lat = info[i]["lat"];
+                  var lng = info[i]["lng"];
+                  var log = info[i]["login"];
+                  var msg = info[i]["message"];
+                  var distFrom = calcDist(myLat, myLng, lat, lng);
+                  var marker = new google.maps.Marker({
+                    position: {lat: lat, lng: lng},
+                  });
+                  marker.setMap(map); //puts the marker on the map
+                  
+                  var infowindow = new google.maps.InfoWindow({
+                    content: "Login: "+log+" Message: "+msg+" Distance From Me: "+distFrom
+                  });
+                  marker.addListener('click', function() {
+                    infowindow.open(map, marker);
+                  });
+                }
+              }
+      }
+
+      //
+      //
+      //renders map onto screen
+      function renderMap() {  
+          
+        me = new google.maps.LatLng(myLat, myLng);
+        
+        // Update map and go there...
+        map.panTo(me);
+  
+        // Create a marker
+        var image = 'icon.jpg'
+        marker = new google.maps.Marker({
+          position: me,
+          title: "Login: EricHawthorn Message: bye felicia Distance From Me: 0",
+          icon: image
+        });
+        marker.setMap(map); //puts the marker on the map
+          
+        // Open info window on click of marker
+        google.maps.event.addListener(marker, 'click', function() {
+          infowindow.setContent(marker.title);
+          infowindow.open(map, marker);
+        });
+      }
+
+      //
+      //
+      //calculate the distance
+      function calcDist(lat1, lon1, lat2, lon2) {
+        Number.prototype.toRad = function() {
+          return this * Math.PI / 180;
+        } 
+        var R = 6371; // km 
+        var x1 = lat2-lat1;
+        var dLat = x1.toRad();  
+        var x2 = lon2-lon1;
+        var dLon = x2.toRad();  
+        var a = Math.sin(dLat/2) * Math.sin(dLat/2) + 
+                Math.cos(lat1.toRad()) * Math.cos(lat2.toRad()) * 
+                Math.sin(dLon/2) * Math.sin(dLon/2);  
+        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+        var d = R * c; 
+
+        return(d);
+      }
     </script>
-    <script async defer
-      src="http://maps.googleapis.com/">
-    </script>
+  </head>
+  
+  <body onload="init()">
+    <div id="map_canvas"></div>
   </body>
 </html>
