@@ -7,8 +7,8 @@
 //
 //
 
-1. What aspects of the work have been implemented correctly? What hasn't?
+1. Everything in the work has been implemented correctly with the exception of the onclick function, which doesn't seem to work regrldess of my actions.
 
-2. Who have I collaborated with in this assignment?
+2. I've worked with the TA Nathan Justice on this assignment.
 
-3. How long have I spent on this assignment?
+3. I've spent quite a few hours working on this assignment, but uncertain where to go from here.
