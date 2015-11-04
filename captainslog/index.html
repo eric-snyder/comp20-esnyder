@@ -6,16 +6,8 @@
 	<title>Captain's Log</title>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 	<script>
-	  //You will need to use the JavaScript Date object to get the timestamp.
-	  //Messages must be stored in local storage
-	  //All displayed messages must be preceded with a human readable timestamp (e.g., "Sat Jul 23 02:16:57 2005", Sun Mar 22 2015 16:05:32 GMT-0400 (EDT))
 	  //"log" section with the latest update showing first!
 	  //Example: Sat Jul 23 02:16:57 2005 - Hello all!
-	 
-	  //get an item in local storage::::::::::::::::::::::::
-	  // if(localStorage.getItem('thing')) {
-	  // $('#thing').html(localStorage.getItam('thing'));
-	  //}
 
 	  //********************how we gon do it
 
@@ -34,14 +26,15 @@
 	  //launch code on document ready: EVERYTHING GOES IN THIS
 	$(document).ready(function(){
 
-
 		var msgArray = [];
-		msgArray = localStorage.getItem("#log");
-
-			log = JSON.parse(localStorage.getItem("#log"));	//parse any local store logs we have already
-			if (message != null) {
-				//print out anything that is in msg
-			}
+		var storedMsg = [];
+		storedMsg = localStorage.getItem("messages");
+		if (storedMsg != undefined) {
+			//print out objects in the msgArray
+			for (var i = storedMsg.length; i > 0; i-- ){
+				$("#log").prepend(storedMsg[i]);
+			};
+		};
 
 	  		//when somebody presses enter into the box
 	  		$("#msg").keypress(function(event) {
@@ -51,13 +44,16 @@
 					var input = $("#msg").val(); 
 					//create the date item to store
 					var date = new Date;
-					//prepend the total message to list
-					$("#log").prepend("<li>" + date + " - " + input + "</li>");
-					
-					//print out everything
+					//create the total message
+					var totalMessage = date + " - " + input;
+					//prepend message to the list
+					$("#log").prepend( "<li>" + totalMessage + "</li>");
+					//add the new message to the front of the array
+					msgArray.unshift(totalMessage);
+					//store this array in localStorage
+					localStorage.setItem("messages", storedMsg + msgArray);
 	  			}
 	  		});
-
 	});
 
 	</script>
