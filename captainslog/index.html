@@ -6,32 +6,59 @@
 	<title>Captain's Log</title>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 	<script>
-	  // Your work will be done here...
-
 	  //You will need to use the JavaScript Date object to get the timestamp.
 	  //Messages must be stored in local storage
 	  //All displayed messages must be preceded with a human readable timestamp (e.g., "Sat Jul 23 02:16:57 2005", Sun Mar 22 2015 16:05:32 GMT-0400 (EDT))
 	  //"log" section with the latest update showing first!
 	  //Example: Sat Jul 23 02:16:57 2005 - Hello all!
+	 
+	  //get an item in local storage::::::::::::::::::::::::
+	  // if(localStorage.getItem('thing')) {
+	  // $('#thing').html(localStorage.getItam('thing'));
+	  //}
 
-	  //var time = new Date(dateString);
-	  //invoking Date without new will return string representing current date and time
+	  //********************how we gon do it
 
-	  // $("#log") -- get element with id log
+	  //only launch anything when the document is ready
+	  //when it is, check if there are any things i printed before in local storage
+	  //if so , print them out
+
+	  //to print things out, you need to prepend their text to the list
+	  //to get the proper text to prepend, you need to get the timestamp, a space, and then the inputted message
+
+	  //for input, make sure that when people press enter, the text in the box gets assigned to a variable, and then the box clears
+	  //the time that the click happens, time is recorded and placed in another variable
+	  //this message is then prepended to the list
+
 	  
-	  //launch code on document ready:
-	  $(document).ready(function(){
-	  	$("title").click(function(event) {
-	  		alert("Hello, it's me");
-	  	}); 
+	  //launch code on document ready: EVERYTHING GOES IN THIS
+	$(document).ready(function(){
 
 
+		var msgArray = [];
+		msgArray = localStorage.getItem("#log");
 
-	  });
-	  
-	  //special event:
-	  //$('form').submit();
+			log = JSON.parse(localStorage.getItem("#log"));	//parse any local store logs we have already
+			if (message != null) {
+				//print out anything that is in msg
+			}
 
+	  		//when somebody presses enter into the box
+	  		$("#msg").keypress(function(event) {
+				if (event.which == 13) {
+				// add a list item
+					//create message variable to store
+					var input = $("#msg").val(); 
+					//create the date item to store
+					var date = new Date;
+					//prepend the total message to list
+					$("#log").prepend("<li>" + date + " - " + input + "</li>");
+					
+					//print out everything
+	  			}
+	  		});
+
+	});
 
 	</script>
 </head>
