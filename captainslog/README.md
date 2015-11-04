@@ -7,8 +7,8 @@
 //
 //
 
-1. What has been implemented correctly?
+1. Everything has been implemented correctly, although perhaps not as cleanly as it could be.
 
-2. Who did you work with on this assignment?
+2. On this assignment, I worked with Rohun Dhar, briefly with Mateo Davis, and Rachael Robinson.
 
-3. How long did you work on this assignment? Started at 4:00 on Monday
+3. I worked on this assignment for about 8 hours.
