@@ -40,8 +40,8 @@
 <li>Risk Level: High -- This security flaw poses a significant risk for any possible users who expect to have a consistent experience, as well as any other clients, including other programs and websites, that would expect the website to work in a normal, predictable way. XSS issues are particularly concerning because of their nature of affecting every user - once code is injected, it can instantly pose a threat to nearly anyone. Lucky for whomever manages the website, XSS issues are easy to fix.</li>
 <li>Data in the POST API doesn't get escaped. It is simple enough to use <code>&lt;script&gt;</code> to inject nearly any sort of Javascript code, which, given how much more robust the language has become, could include nearly anything. Using the following submission form that I created and opened in the browser (a separate issue to be detailed later on in this page) I was able to successfully inject a javascript <code>alert()</code> into the message box, creating dialogues every time the page was opened:
 <table class="galleryTable">
-<tr><td><img src="img/pre-xss-client.png" alt="pre-injection" title="Client site before injection" /></td>
-<td><img src="img/post-xss-client.png" alt="post-injection" title="Client site after injection" /></td></tr>
+<tr><td><img src="SecurityInterface.png" alt="pre-injection" title="Interface for Security Test" style="width=300px;" /></td>
+<td><img src="JavascriptAlert.png" alt="post-injection" title="Site following injection of outside code" style="width=300px;" /></td></tr>
 </table></li>
 <li>A good way to fix this problem would be to simply have a check that doesn't allow for the inclusion of javascript messages via &lt; and &gt; symbols. But, should one want to allow more flexibility with the message system, dangerous symbols like brackets, parentheses, etc., could be converted to their HTML equivalents.</li>
 </ul></li>
@@ -53,9 +53,9 @@
 <li>Risk Level: Low -- not so much of an attack, but allowing false data to be submitted to the database.</li>
 <li>This is a rather simple issue, and one that doesn't have nearly as bad consequences as some others, but is something to watch for regardless. Location spoofing, or, in other words, submitting information to the browser indicating that you are somewhere that you aren't, can be a difficult problem to detect. The easiest way is to simply do into developer mode on a web browser, like Chrome:
 <table class="galleryTable">
-<tr><td><img src="img/malformed-submit.png" alt="Malformed data" title="Malformed data submitted via POST" /></td>
-<td><img src="img/malformed-get.png" alt="GET crashes server" title="GETting the highscores crashes the server" /></td>
-<td><img src="img/malformed-log.png" alt="Server log" title="The unexpected character causes an exception" /></td></tr>
+<tr>
+<td><img src="DeveloperSpoof.png" alt="Location Emulator" title="Interface for Location Spoofing" style="width=300px;" /></td>
+</tr>
 </table></li>
 <li>As seen, developer mode even allows one to change what type of device that the website interprets the data coming from. This isn't a problem that concerns the program at hand, but is regardless a security issue that could be adressed depending on context.</p></li>
 
@@ -68,15 +68,13 @@
 <li>Risk Level: High -- Other websites are allowed to interact with MapChat in nearly any way they please, which can pose some obvious security risks.</li>
 <li>Specifically, the inclusion of <code>Access-Control-Allow-Origin: *</code> allows sharing with every origin. In other words, any site can submit a request and get a response -- anyone can access the website. This poses particular security risks for trying to submit any sort of information that should be classified, like a message intended for only one person, for example. In this case, it's this loophole specifically that allowed us to develop the Security Form mentioned above which allowed us to submit the information that we did, creating the Cross-Site Scripting (XSS) problem that we saw above:
 <table class="galleryTable">
-<tr><td><img src="img/extra-field-curl.png" alt="Inserting extra fields" title="Submitting extra fields via POST" /></td>
-<td><img src="img/extra-field-mongo.png" alt="Server log" title="All fields are stored in Mongo, including extras" /></td></tr>
+<tr><td><img src="POSTCORS.png" alt="POST vulnerability" title="Using open CORS for different site information" style="width=300px;" /></td>
+<td><img src="GETCORS.png" alt="GET vulnerability" title="Using open CORS for different site information" style="width=300px;" /></td></tr>
 </table></li>
 <li><p>This can be resolved by removing that line of code specifically. Otherwise, the site will continue to allow requests from any other site, and will continue to serve responses.
 </ul></li>
 
 </ol>
-
-<!-- DO THIS-->
 
 <h2>Conclusion:</h2>
 
