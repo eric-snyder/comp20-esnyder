@@ -9,8 +9,8 @@
 ##
 ##
 
-1.
+1. I believe that everything has been implemented correctly.
 
-2.
+2. I worked with my friend Akshi on this assignment, who was also assigned my MapChat server for her own assignment.
 
-3.
+3. I have worked for approximately 6 hours on this assignment.
