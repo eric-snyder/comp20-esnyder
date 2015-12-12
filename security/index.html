@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mapchat Security Report</title>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('.galleryTable').each(function(index, elem){
+                $('img', elem).wrap(function() {
+                    return '<a class="fancybox" rel="gal' + index + '" href="' + $(this).prop('src') + '" title="' + $(this).prop('title') + '">' + $(this).html() + '</a>';
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+<h1>Mapchat Security Report</h1>
+
+<p>Created by <a href="http://eric-snyder.github.io">Eric Snyder</a> &bull; 12/8/2015</p>
+
+<h2>Intro:</h2>
+
+<p>Here, I assess the security of <a href="http://protected-bastion-2115.herokuapp.com/">MapChat</a> , which was developed by Akshi Vaidyanathan for Comp20 assignment 5. Mapchat is a web application that can take the user's location information and a short text message and then displays it on a map using the GoogleMaps API. There is also an interface included in this specific assignment that allows users to see a list of previously submitted messages as well as the times that they were submitted. There are a number of potential vulnerabilities however, and I'll be detailing them below.</p>
+
+<h2>Methodology:</h2>
+
+<p>I began testing using blackbox methods, referring to the normal tools that a hacker would have. I used the original heroku website, and at first did not need to test locally. I used a separate security form which submitted to the /sendLocation website and allowed me to input whatever data that I wanted, including <code>&lt;script&gt;</code>, allowing me to insert alerts, among other javascript commands, into the browser. I then moved forward by examining the code itself, which helped me confirm what I already thought, that her code had a few VERY important security issues that could easily be exploited by nearly anyone with an internet connection.</p>
+
+<h2>Abstract of Findings:</h2>
+
+<p>I predicted this happening, and it turned out to be that most security issues came down to a lack of assuring that inputs to the database were secure. Although there were some checks to ensure that nobody could insert input that couldn't be reliably stored in the database, it did not check for input in the message field. This could easily allow an attacker to insert code that affects all users and change the appearance of the website, a very pressing and widespread problem. Most of these issues had easy fixes, and the programmer of such a program would simply need to be cognisant of possible corner cases.</p>
+
+<h2>Issues:</h2>
+
+<ol>
+<li><p><strong>Cross-Site Scripting (XSS)</strong></p>
+
+<ul>
+<li>Where: POST API, /sendLocation</li>
+<li>Risk Level: High -- This security flaw poses a significant risk for any possible users who expect to have a consistent experience, as well as any other clients, including other programs and websites, that would expect the website to work in a normal, predictable way. XSS issues are particularly concerning because of their nature of affecting every user - once code is injected, it can instantly pose a threat to nearly anyone. Lucky for whomever manages the website, XSS issues are easy to fix.</li>
+<li>Data in the POST API doesn't get escaped. It is simple enough to use <code>&lt;script&gt;</code> to inject nearly any sort of Javascript code, which, given how much more robust the language has become, could include nearly anything. Using the following submission form that I created and opened in the browser (a separate issue to be detailed later on in this page) I was able to successfully inject a javascript <code>alert()</code> into the message box, creating dialogues every time the page was opened:
+<table class="galleryTable">
+<tr><td><img src="img/pre-xss-client.png" alt="pre-injection" title="Client site before injection" /></td>
+<td><img src="img/post-xss-client.png" alt="post-injection" title="Client site after injection" /></td></tr>
+</table></li>
+<li>A good way to fix this problem would be to simply have a check that doesn't allow for the inclusion of javascript messages via &lt; and &gt; symbols. But, should one want to allow more flexibility with the message system, dangerous symbols like brackets, parentheses, etc., could be converted to their HTML equivalents.</li>
+</ul></li>
+
+<li><p><strong>Geo-Location Spoofing</strong></p>
+
+<ul>
+<li>Where: POST API, /sendLocation</li>
+<li>Risk Level: Low -- not so much of an attack, but allowing false data to be submitted to the database.</li>
+<li>This is a rather simple issue, and one that doesn't have nearly as bad consequences as some others, but is something to watch for regardless. Location spoofing, or, in other words, submitting information to the browser indicating that you are somewhere that you aren't, can be a difficult problem to detect. The easiest way is to simply do into developer mode on a web browser, like Chrome:
+<table class="galleryTable">
+<tr><td><img src="img/malformed-submit.png" alt="Malformed data" title="Malformed data submitted via POST" /></td>
+<td><img src="img/malformed-get.png" alt="GET crashes server" title="GETting the highscores crashes the server" /></td>
+<td><img src="img/malformed-log.png" alt="Server log" title="The unexpected character causes an exception" /></td></tr>
+</table></li>
+<li>As seen, developer mode even allows one to change what type of device that the website interprets the data coming from. This isn't a problem that concerns the program at hand, but is regardless a security issue that could be adressed depending on context.</p></li>
+
+</ul></li>
+
+<li><p><strong>Overly Open Use of CORS</strong></p>
+
+<ul>
+<li>Where: GET and POST APIs, for /sendLocation and /latest.json</li>
+<li>Risk Level: High -- Other websites are allowed to interact with MapChat in nearly any way they please, which can pose some obvious security risks.</li>
+<li>Specifically, the inclusion of <code>Access-Control-Allow-Origin: *</code> allows sharing with every origin. In other words, any site can submit a request and get a response -- anyone can access the website. This poses particular security risks for trying to submit any sort of information that should be classified, like a message intended for only one person, for example. In this case, it's this loophole specifically that allowed us to develop the Security Form mentioned above which allowed us to submit the information that we did, creating the Cross-Site Scripting (XSS) problem that we saw above:
+<table class="galleryTable">
+<tr><td><img src="img/extra-field-curl.png" alt="Inserting extra fields" title="Submitting extra fields via POST" /></td>
+<td><img src="img/extra-field-mongo.png" alt="Server log" title="All fields are stored in Mongo, including extras" /></td></tr>
+</table></li>
+<li><p>This can be resolved by removing that line of code specifically. Otherwise, the site will continue to allow requests from any other site, and will continue to serve responses.
+</ul></li>
+
+</ol>
+
+<!-- DO THIS-->
+
+<h2>Conclusion:</h2>
+
+<p>These security issues make MapChat unreliable and insecure. A good plan would be, however, to provide a more directed experience with stricter requirements and methods for submitting data -- as most of the problems arose from trusting that user input would work well and not cause any issues. Luckily, the task at hand wouldn't be hard to fix, and would take a day at most. If you have any other thoughts, <a href="mailto:eric.snyder@tufts.edu">email me with any questions!</a></p>
+</body>
+</html>
